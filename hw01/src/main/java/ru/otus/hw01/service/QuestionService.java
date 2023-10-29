@@ -12,16 +12,17 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuizService implements IService {
+public class QuestionService implements IService<Question> {
 	private IDao<Question> questionDAO;
 
 	@Override
-	public void printQuestions() {
+	public List<Question> printData() {
 		List<Question> questions = questionDAO.getQuestions();
 		for (Question question : questions) {
 			System.out.println(question.getValue());
 			question.getAnswers().stream().map(Answer::getValueWithTabPrefix).forEach(System.out::println);
 			System.out.println();
 		}
+		return questions;
 	}
 }

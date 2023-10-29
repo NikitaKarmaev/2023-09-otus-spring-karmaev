@@ -1,6 +1,8 @@
 package ru.otus.hw01.service;
 
-public interface IService {
+import java.util.List;
 
-	void printQuestions();
+public interface IService<T> {
+
+	List<T> printData();
 }
