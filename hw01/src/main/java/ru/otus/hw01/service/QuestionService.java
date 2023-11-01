@@ -1,28 +1,20 @@
 package ru.otus.hw01.service;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import ru.otus.hw01.bean.Answer;
-import ru.otus.hw01.bean.Question;
-import ru.otus.hw01.dao.IDao;
+import lombok.RequiredArgsConstructor;
+import ru.otus.hw01.dao.Dao;
+import ru.otus.hw01.entity.Question;
+import ru.otus.hw01.service.api.EntityService;
+import ru.otus.hw01.service.api.IOService;
 
 import java.util.List;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class QuestionService implements IService<Question> {
-	private IDao<Question> questionDAO;
+@RequiredArgsConstructor
+public class QuestionService implements EntityService {
+
+	private final Dao<Question> questionDAO;
 
 	@Override
-	public List<Question> printData() {
-		List<Question> questions = questionDAO.getQuestions();
-		for (Question question : questions) {
-			System.out.println(question.getValue());
-			question.getAnswers().stream().map(Answer::getValueWithTabPrefix).forEach(System.out::println);
-			System.out.println();
-		}
-		return questions;
+	public List<Question> getAll() {
+		return questionDAO.getAll();
 	}
 }

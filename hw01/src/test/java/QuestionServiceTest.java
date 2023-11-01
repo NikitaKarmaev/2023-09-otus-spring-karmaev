@@ -1,25 +1,25 @@
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
-import ru.otus.hw01.bean.Answer;
-import ru.otus.hw01.bean.Question;
-import ru.otus.hw01.dao.impl.QuestionCsvDAO;
+import org.mockito.junit.jupiter.MockitoExtension;
+import ru.otus.hw01.dao.QuestionDAO;
+import ru.otus.hw01.entity.Answer;
+import ru.otus.hw01.entity.Question;
 import ru.otus.hw01.service.QuestionService;
 
 import java.util.List;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class QuestionServiceTest {
 
 	@InjectMocks
-	private QuestionService service = new QuestionService();
+	private QuestionService service;
 
 	@Mock
-	private QuestionCsvDAO dao;
+	private QuestionDAO questionDAO;
 
 	@Test
 	public void runTest() {
@@ -27,10 +27,10 @@ public class QuestionServiceTest {
 		Answer answer2 = new Answer("No", false);
 		Question question = new Question("Is test running?", List.of(answer1, answer2));
 		List<Question> expectedQuestions = List.of(question);
-		Mockito.when(dao.getQuestions()).thenReturn(expectedQuestions);
+		Mockito.when(questionDAO.getAll()).thenReturn(expectedQuestions);
 
-		List<Question> realQuestions = service.printData();
+		List<Question> realQuestions = service.getAll();
 
-		Assert.assertEquals(expectedQuestions, realQuestions);
+		Assertions.assertEquals(expectedQuestions, realQuestions);
 	}
 }

@@ -1,4 +1,4 @@
-package ru.otus.hw01.bean;
+package ru.otus.hw01.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Answer {
@@ -14,7 +13,8 @@ public class Answer {
 
 	private boolean flag;
 
-	public String getValueWithTabPrefix() {
-		return "\t- " + getValue();
+	@Override
+	public String toString() {
+		return value;
 	}
 }

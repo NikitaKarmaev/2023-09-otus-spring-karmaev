@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="http://www.springframework.org/schema/beans"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd">
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
 
-    <bean id="quizService" class="ru.otus.hw01.service.QuestionService">
-        <property name="questionDAO" ref="questionCsvDAO"/>
+    <bean id="runService" class="ru.otus.hw01.service.RunnerServiceImpl">
+        <constructor-arg ref="questionService"/>
+        <constructor-arg ref="printService"/>
     </bean>
 
-    <bean id="questionCsvDAO" class="ru.otus.hw01.dao.impl.QuestionCsvDAO">
+    <bean id="questionService" class="ru.otus.hw01.service.QuestionService">
+        <constructor-arg ref="questionDAO"/>
+    </bean>
+
+    <bean id="printService" class="ru.otus.hw01.service.PrintService">
+        <constructor-arg index="1">
+            <util:constant static-field="java.lang.System.out"/>
+        </constructor-arg>
+        <constructor-arg index="0">
+            <util:constant static-field="java.lang.System.in"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="questionDAO" class="ru.otus.hw01.dao.QuestionDAO">
         <constructor-arg>
             <value type="java.lang.String">questions.csv</value>
         </constructor-arg>
