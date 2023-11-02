@@ -1,11 +1,8 @@
 package ru.otus.hw01.entity;
 
-import com.opencsv.bean.CsvBindByPosition;
-import com.opencsv.bean.CsvCustomBindByPosition;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.otus.hw01.converter.AnswerCsvConverter;
 
 import java.util.List;
 

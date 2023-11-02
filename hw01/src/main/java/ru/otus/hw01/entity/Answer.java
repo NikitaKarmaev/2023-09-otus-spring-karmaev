@@ -3,7 +3,6 @@ package ru.otus.hw01.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -11,7 +10,7 @@ import lombok.ToString;
 public class Answer {
 	private String value;
 
-	private boolean flag;
+	private boolean isCorrect;
 
 	@Override
 	public String toString() {

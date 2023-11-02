@@ -1,12 +1,8 @@
 package ru.otus.hw01.service.api;
 
-import java.util.List;
-
 public interface IOService {
 
-	void print(String message);
+	void printLine(String s);
 
-	void print(List<?> list);
-
-	String read();
+	void printFormattedLine(String s, Object ...args);
 }
