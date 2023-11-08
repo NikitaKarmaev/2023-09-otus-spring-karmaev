@@ -1,4 +1,4 @@
-package ru.otus.hw01.entity;
+package ru.otus.course.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

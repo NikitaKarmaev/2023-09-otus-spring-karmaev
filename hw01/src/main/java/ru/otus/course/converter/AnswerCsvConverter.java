@@ -1,8 +1,8 @@
-package ru.otus.hw01.converter;
+package ru.otus.course.converter;
 
 import com.opencsv.bean.AbstractCsvConverter;
 import lombok.NoArgsConstructor;
-import ru.otus.hw01.entity.Answer;
+import ru.otus.course.entity.Answer;
 
 @NoArgsConstructor
 public class AnswerCsvConverter extends AbstractCsvConverter {

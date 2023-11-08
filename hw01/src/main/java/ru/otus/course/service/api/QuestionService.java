@@ -1,6 +1,6 @@
-package ru.otus.hw01.service.api;
+package ru.otus.course.service.api;
 
-import ru.otus.hw01.entity.Question;
+import ru.otus.course.entity.Question;
 
 import java.util.List;
 

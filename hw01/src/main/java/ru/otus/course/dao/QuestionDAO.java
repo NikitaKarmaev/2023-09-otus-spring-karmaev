@@ -1,6 +1,6 @@
-package ru.otus.hw01.dao;
+package ru.otus.course.dao;
 
-import ru.otus.hw01.entity.Question;
+import ru.otus.course.entity.Question;
 
 import java.util.List;
 

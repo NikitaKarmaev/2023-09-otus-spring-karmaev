@@ -1,6 +1,6 @@
-package ru.otus.hw01.service;
+package ru.otus.course.service;
 
-import ru.otus.hw01.service.api.IOService;
+import ru.otus.course.service.api.IOService;
 
 import java.io.OutputStream;
 import java.io.PrintStream;

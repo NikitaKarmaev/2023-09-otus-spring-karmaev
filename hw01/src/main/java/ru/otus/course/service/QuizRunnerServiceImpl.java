@@ -1,11 +1,11 @@
-package ru.otus.hw01.service;
+package ru.otus.course.service;
 
 import lombok.RequiredArgsConstructor;
-import ru.otus.hw01.entity.Answer;
-import ru.otus.hw01.entity.Question;
-import ru.otus.hw01.service.api.IOService;
-import ru.otus.hw01.service.api.QuestionService;
-import ru.otus.hw01.service.api.QuizRunnerService;
+import ru.otus.course.entity.Answer;
+import ru.otus.course.entity.Question;
+import ru.otus.course.service.api.IOService;
+import ru.otus.course.service.api.QuestionService;
+import ru.otus.course.service.api.QuizRunnerService;
 
 import java.util.List;
 

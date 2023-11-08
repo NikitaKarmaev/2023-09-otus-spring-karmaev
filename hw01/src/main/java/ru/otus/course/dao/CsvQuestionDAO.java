@@ -1,10 +1,10 @@
-package ru.otus.hw01.dao;
+package ru.otus.course.dao;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import ru.otus.hw01.dao.dto.QuestionDTO;
-import ru.otus.hw01.entity.Question;
-import ru.otus.hw01.exception.QuestionReadException;
+import ru.otus.course.dao.dto.QuestionDTO;
+import ru.otus.course.entity.Question;
+import ru.otus.course.exception.QuestionReadException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class QuestionDAOImpl implements QuestionDAO {
+public class CsvQuestionDAO implements QuestionDAO {
 
 	private final String csvPath;
 
-	public QuestionDAOImpl(String csvPath) {
+	public CsvQuestionDAO(String csvPath) {
 		this.csvPath = csvPath;
 	}
 

@@ -1,4 +1,4 @@
-package ru.otus.hw01.exception;
+package ru.otus.course.exception;
 
 public class QuestionReadException extends RuntimeException {
 

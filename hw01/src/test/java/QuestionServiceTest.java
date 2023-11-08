@@ -5,10 +5,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.otus.hw01.dao.QuestionDAOImpl;
-import ru.otus.hw01.entity.Answer;
-import ru.otus.hw01.entity.Question;
-import ru.otus.hw01.service.QuestionServiceImpl;
+import ru.otus.course.dao.CsvQuestionDAO;
+import ru.otus.course.entity.Answer;
+import ru.otus.course.entity.Question;
+import ru.otus.course.service.QuestionServiceImpl;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class QuestionServiceTest {
 	private QuestionServiceImpl service;
 
 	@Mock
-	private QuestionDAOImpl questionDAO;
+	private CsvQuestionDAO questionDAO;
 
 	@Test
 	public void runTest() {

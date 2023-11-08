@@ -1,7 +1,7 @@
-package ru.otus.hw01;
+package ru.otus.course;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import ru.otus.hw01.service.api.QuizRunnerService;
+import ru.otus.course.service.api.QuizRunnerService;
 
 public class ApplicationHW01 {
 

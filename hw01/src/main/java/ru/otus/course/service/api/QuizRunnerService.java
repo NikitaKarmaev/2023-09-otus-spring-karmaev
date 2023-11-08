@@ -1,4 +1,4 @@
-package ru.otus.hw01.service.api;
+package ru.otus.course.service.api;
 
 public interface QuizRunnerService {
 
