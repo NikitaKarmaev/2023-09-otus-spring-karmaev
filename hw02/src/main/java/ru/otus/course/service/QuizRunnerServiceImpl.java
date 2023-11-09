@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.course.entity.QuizResult;
 import ru.otus.course.entity.Student;
-import ru.otus.course.service.api.*;
+import ru.otus.course.service.api.QuizRunnerService;
+import ru.otus.course.service.api.QuizService;
+import ru.otus.course.service.api.ResultService;
+import ru.otus.course.service.api.StudentService;
 
 @Service
 @RequiredArgsConstructor

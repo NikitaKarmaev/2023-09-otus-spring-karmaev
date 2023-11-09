@@ -30,18 +30,14 @@ public class QuizServiceImpl implements QuizService {
 		final AtomicInteger counter = new AtomicInteger(1);
 		boolean isAnswerValid;
 		for (Question question: questions) {
-			List<String> formattedAnswers = question.getAnswers()
-					.stream()
+			List<String> formattedAnswers = question.getAnswers().stream()
 					.map(awr -> counter.getAndIncrement() + ")" + awr.getValue())
 					.toList();
 			String joinedAnswers = String.join("\n\t", formattedAnswers);
 			ioService.printFormattedLine("%s:\n\t%s\n", question.getValue(), joinedAnswers);
 
-			int specifiedAnswer = ioService.readIntForRangeWithPrompt(
-					1,
-					formattedAnswers.size(),
-					"Your answer:",
-					"Specified answer does not exist! Try again"
+			int specifiedAnswer = ioService.readIntForRangeWithPrompt(1, formattedAnswers.size(),
+					"Your answer:", "Specified answer does not exist! Try again"
 			);
 			isAnswerValid = question.getAnswers().get(specifiedAnswer - 1).isCorrect();
 			testResult.applyAnswer(question, isAnswerValid);
