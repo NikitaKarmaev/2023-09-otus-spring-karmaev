@@ -3,6 +3,7 @@ package ru.otus.course.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.course.dao.QuestionDAO;
+import ru.otus.course.entity.Answer;
 import ru.otus.course.entity.Question;
 import ru.otus.course.entity.QuizResult;
 import ru.otus.course.entity.Student;
@@ -23,26 +24,36 @@ public class QuizServiceImpl implements QuizService {
 	@Override
 	public QuizResult executeQuizFor(Student student) {
 		ioService.printLine("");
-		ioService.printFormattedLine("Please answer the questions below:\n");
+		ioService.printFormattedLine("Please answer the questions below:");
 		List<Question> questions = questionDAO.getAll();
 		QuizResult testResult = new QuizResult(student);
 
-		final AtomicInteger counter = new AtomicInteger(1);
-		boolean isAnswerValid;
 		for (Question question: questions) {
-			List<String> formattedAnswers = question.getAnswers().stream()
-					.map(awr -> counter.getAndIncrement() + ")" + awr.getValue())
-					.toList();
-			String joinedAnswers = String.join("\n\t", formattedAnswers);
-			ioService.printFormattedLine("%s:\n\t%s\n", question.getValue(), joinedAnswers);
-
-			int specifiedAnswer = ioService.readIntForRangeWithPrompt(1, formattedAnswers.size(),
-					"Your answer:", "Specified answer does not exist! Try again"
-			);
-			isAnswerValid = question.getAnswers().get(specifiedAnswer - 1).isCorrect();
+			int specifiedAnswer = getSpecifiedAnswer(question);
+			boolean isAnswerValid = question.getAnswers().get(specifiedAnswer - 1).isCorrect();
 			testResult.applyAnswer(question, isAnswerValid);
-			counter.set(1);
 		}
 		return testResult;
+	}
+
+	private int getSpecifiedAnswer(Question question) {
+		AtomicInteger counter = new AtomicInteger(1);
+		List<Answer> answers = question.getAnswers();
+
+		StringBuilder sb = new StringBuilder();
+		for (Answer answer : answers) {
+			sb.append("\n\t");
+			sb.append(counter.getAndIncrement());
+			sb.append(")");
+			sb.append(answer.getValue());
+		}
+		ioService.printFormattedLine("\n%s:%s", question.getValue(), sb.toString());
+
+		return ioService.readIntForRangeWithPrompt(
+				1,
+				answers.size(),
+				"Your answer:",
+				"Specified answer does not exist! Try again"
+		);
 	}
 }
