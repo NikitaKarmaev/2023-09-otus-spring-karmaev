@@ -11,7 +11,6 @@ import ru.otus.course.service.api.IOService;
 import ru.otus.course.service.api.QuizService;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @RequiredArgsConstructor
@@ -37,13 +36,13 @@ public class QuizServiceImpl implements QuizService {
 	}
 
 	private int getSpecifiedAnswer(Question question) {
-		AtomicInteger counter = new AtomicInteger(1);
+		int counter = 1;
 		List<Answer> answers = question.getAnswers();
 
 		StringBuilder sb = new StringBuilder();
 		for (Answer answer : answers) {
 			sb.append("\n\t");
-			sb.append(counter.getAndIncrement());
+			sb.append(counter++);
 			sb.append(")");
 			sb.append(answer.getValue());
 		}
