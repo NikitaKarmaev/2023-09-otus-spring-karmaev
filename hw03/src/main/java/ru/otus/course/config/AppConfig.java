@@ -1,28 +1,31 @@
 package ru.otus.course.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Locale;
+import java.util.Map;
 
-@Component
-@PropertySource("application.properties")
-public class AppConfig implements QuizConfig, QuizLocaleProvider {
+@ConfigurationProperties(prefix = "app")
+public class AppConfig implements QuizConfig, QuizLocaleProvider, QuizFileNameProvider {
 
-	@Value("${app.rightAnswersCountToPass}")
+	@Getter
+	@Setter
 	private int rightAnswersCountToPass;
 
-	@Value("${app.locale}")
+	@Getter
 	private Locale locale;
 
-	@Override
-	public int getRightAnswersCountToPass() {
-		return rightAnswersCountToPass;
+	@Setter
+	private Map<String, String> fileNameByLocaleTag;
+
+	public void setLocale(String locale) {
+		this.locale = Locale.forLanguageTag(locale);
 	}
 
 	@Override
-	public Locale getLocale() {
-		return locale;
+	public String getQuizFileName() {
+		return fileNameByLocaleTag.get(locale.toLanguageTag());
 	}
 }

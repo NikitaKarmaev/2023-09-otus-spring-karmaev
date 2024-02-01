@@ -4,7 +4,7 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import ru.otus.course.config.LocalizedMessages;
+import ru.otus.course.config.QuizFileNameProvider;
 import ru.otus.course.dao.dto.QuestionDTO;
 import ru.otus.course.entity.Question;
 import ru.otus.course.exception.QuestionReadException;
@@ -20,11 +20,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CsvQuestionDAO implements QuestionDAO {
 
-	private final LocalizedMessages messages;
+	private final QuizFileNameProvider fileNameProvider;
 
 	@Override
 	public List<Question> getAll() {
-		String csvPath = messages.getFileName();
+		String csvPath = fileNameProvider.getQuizFileName();
 		InputStream in = Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(csvPath));
 		try (InputStreamReader input = new InputStreamReader(in)) {
 			CsvToBean<QuestionDTO> csvBean = new CsvToBeanBuilder<QuestionDTO>(input)

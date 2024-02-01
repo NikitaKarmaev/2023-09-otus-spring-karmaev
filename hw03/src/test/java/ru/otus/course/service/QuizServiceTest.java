@@ -13,6 +13,7 @@ import ru.otus.course.entity.Question;
 import ru.otus.course.entity.QuizResult;
 import ru.otus.course.entity.Student;
 import ru.otus.course.service.api.IOService;
+import ru.otus.course.service.api.LocalizedIOService;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ import java.util.List;
 public class QuizServiceTest {
 
 	@Mock
-	private IOService ioService;
+	private LocalizedIOService ioService;
 
 	@Mock
 	private QuestionDAO questionDAO;
@@ -36,10 +37,10 @@ public class QuizServiceTest {
 		List<Question> expectedQuestions = List.of(question);
 
 		Mockito.when(questionDAO.getAll()).thenReturn(expectedQuestions);
-		Mockito.when(ioService.readIntForRangeWithPrompt(1, 2,
-				"Your answer:",
-				"Specified answer does not exist! Try again")
-		).thenReturn(1);
+		Mockito.when(ioService.readIntForRangeWithPromptLocalized(1, 2,
+				"answer.promptMessage",
+				"answer.errorMessage"
+		)).thenReturn(1);
 
 		Student student = new Student("Ivan", "Ivanov");
 		QuizResult result = quizService.executeQuizFor(student);

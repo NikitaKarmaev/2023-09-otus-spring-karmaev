@@ -2,13 +2,12 @@ package ru.otus.course.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.otus.course.config.LocalizedMessages;
 import ru.otus.course.dao.QuestionDAO;
 import ru.otus.course.entity.Answer;
 import ru.otus.course.entity.Question;
 import ru.otus.course.entity.QuizResult;
 import ru.otus.course.entity.Student;
-import ru.otus.course.service.api.IOService;
+import ru.otus.course.service.api.LocalizedIOService;
 import ru.otus.course.service.api.QuizService;
 
 import java.util.List;
@@ -17,16 +16,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QuizServiceImpl implements QuizService {
 
-	private final LocalizedMessages messages;
-
-	private final IOService ioService;
+	private final LocalizedIOService ioService;
 
 	private final QuestionDAO questionDAO;
 
 	@Override
 	public QuizResult executeQuizFor(Student student) {
 		ioService.printLine("");
-		ioService.printFormattedLine(messages.getIntro());
+		ioService.printLineLocalized("quiz.intro");
 		List<Question> questions = questionDAO.getAll();
 		QuizResult testResult = new QuizResult(student);
 
@@ -51,11 +48,11 @@ public class QuizServiceImpl implements QuizService {
 		}
 		ioService.printFormattedLine("\n%s:%s", question.getValue(), sb.toString());
 
-		return ioService.readIntForRangeWithPrompt(
+		return ioService.readIntForRangeWithPromptLocalized(
 				1,
 				answers.size(),
-				messages.getPromptMessage(),
-				messages.getErrorMessage()
+				"answer.promptMessage",
+				"answer.errorMessage"
 		);
 	}
 }
