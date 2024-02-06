@@ -1,0 +1,6 @@
+# Добавить сюда своих вопросов. Эту строку надо пропустить при настройке CsvToBean (withSkipLines)
+Есть ли жизнь на Марсе?;Наука не дает на это ответ%true|Конечно. Красный НЛО с Марса, а зелёный с Венеры%false|Точно нет%false
+Как должны загружаться ресурсы для jar в Java?;ClassLoader#getResourceAsStream или ClassPathResource#getInputStream%true|ClassLoader#geResource#getFile + FileReader%false|Вингардиум Левиоса%false
+Какой из вариантов для обработки ошибок самый правильный?;@SneakyThrow%false|e.printStackTrace()%false|Проброс на уровень выше, предварительно обернув в экземпляр собственного Exception (например, QuestionReadException)%true|Игнорировать ошибку%false
+Используешь ли ты новые знания в текущей работе?;Да, использую%true|Нет, не использую%false
+Какой цвет имеет хэш-значение #FFFFFF?;Черный%false|Зелёный%false|Красный%false|Белый%true
