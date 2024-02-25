@@ -1,0 +1,37 @@
+package ru.otus.hw.repositories.jpa;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+import ru.otus.hw.models.Author;
+import ru.otus.hw.repositories.AuthorRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+@RequiredArgsConstructor
+public class JpaAuthorRepository implements AuthorRepository {
+
+    @PersistenceContext
+    private final EntityManager em;
+
+    @Override
+    public List<Author> findAll() {
+        TypedQuery<Author> query = em.createQuery("select a from Author a", Author.class);
+        return query.getResultList();
+    }
+
+    @Override
+    public Optional<Author> findById(long id) {
+        try {
+            Author author = em.find(Author.class, id);
+            return Optional.of(author);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
+}
