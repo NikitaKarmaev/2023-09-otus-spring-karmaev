@@ -1,0 +1,22 @@
+spring:
+  data:
+    mongodb:
+      database: myDB
+      port: 8082
+      host: localhost
+  shell:
+    command:
+      version:
+        enabled: false
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 4.4.16
+
+mongock:
+  runner-type: "InitializingBean"
+  change-logs-scan-package: ru.otus.hw.mongo
+  mongo-db:
+    write-concern:
+      journal: false
