@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit book</title>
+
+    <style>
+        body {
+            padding: 50px;
+        }
+        label {
+            display: inline-block;
+            width: 50px;
+            font-size: 15pt;
+        }
+        .row {
+            width: 300px;
+            margin-top: 10px;
+        }
+        .center-block {
+            width: 250px;
+            margin: 0 auto;
+        }
+        .buttons {
+            width: 120px;
+            margin-left: 30%;
+            margin-top: 10px;
+        }
+        .error {
+            color: red;
+        }
+
+        h2 {
+            text-align: center;
+            width: 150px;
+            margin-left: 35%;
+            margin-top: 10px;
+        }
+        button {
+            margin-right: 5px;
+            width: 120px;
+            height: 30px;
+        }
+        input, select {
+            margin-left: 10px;
+        }
+    </style>
+    <script>
+        function getBook() {
+            let athr = 0;
+            let gnr = 0;
+            if ("[[${refer}]]" === "/book/new") {
+                getAuthor(athr);
+                getGenre(gnr);
+            } else {
+                fetch("/api/books/[[${bookId}]]")
+                    .then(response => response.json()).then(book => {
+                    let bookId = document.getElementById("input-id");
+                    let title = document.getElementById("input-title");
+                    bookId.value = `${book.bookId}`;
+                    title.value = `${book.title}`;
+                    athr = `${book.author.authorId}`;
+                    gnr = `${book.genre.genreId}`;
+                    getAuthor(athr);
+                    getGenre(gnr);
+                });
+            }
+        }
+
+        function getAuthor(authorId) {
+            fetch("/api/authors").then(response => response.json()).then(authors => {
+                let specAuthor = document.getElementById("spec-author");
+                authors.forEach(author => {
+                    if (`${author.authorId}` === authorId) {
+                        specAuthor.options[specAuthor.options.length] =
+                            new Option(`${author.fullName}`, `${author.authorId}`, true, true);
+                    } else {
+                        specAuthor.options[specAuthor.options.length] =
+                            new Option(`${author.fullName}`, `${author.authorId}`);
+                    }
+                });
+            });
+        }
+
+        function getGenre(genreId) {
+            return fetch("/api/genres")
+                .then(response => response.json()).then(genres => {
+                    let specGenre = document.getElementById("spec-genre");
+                    genres.forEach(genre => {
+                        if (`${genre.genreId}` === genreId) {
+                            specGenre.options[specGenre.options.length] =
+                                new Option(`${genre.name}`, `${genre.genreId}`, true, true);
+                        } else {
+                            specGenre.options[specGenre.options.length] =
+                                new Option(`${genre.name}`, `${genre.genreId}`);
+                        }
+                    });
+                });
+        }
+
+        function saveBook() {
+            let bookId = document.getElementById("input-id");
+            let title = document.getElementById("input-title");
+            let authorId = document.getElementById("spec-author");
+            let genreId = document.getElementById("spec-genre");
+
+            let values = [title, authorId, genreId];
+            checkValid(values);
+
+            saveOrMergeBook(bookId, title, authorId, genreId)
+        }
+
+        function saveOrMergeBook(bookId, title, authorId, genreId) {
+            let url;
+            let method;
+            let book;
+
+            if ("[[${refer}]]" === "/book/new") {
+                url = "/api/books";
+                method = 'POST';
+                book = {
+                        title: title.value,
+                        authorId: authorId.value,
+                        genreId: genreId.value
+                }
+            } else {
+                url = "/api/books/" + bookId.value;
+                method = 'PUT';
+                book = {
+                        bookId: bookId.value,
+                        title: title.value,
+                        authorId: authorId.value,
+                        genreId: genreId.value
+                }
+            }
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(book)})
+                .then(response =>  {
+                    if (response.ok) {
+                        window.location.href = '/books';
+                    }
+            })
+        }
+
+        function checkValid(values) {
+            values.forEach(element => {
+                if (/([ ])\1/.test(element.value) || element.value === "") {
+                    document.getElementById("error").innerHTML = "Some values are incorrect";
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', getBook);
+    </script>
+</head>
+<body>
+<form id="edit-form" th:method = "post" th:action="${refer}">
+    <div class="center-block">
+        <div class="row" th:if="${refer == '/book/edit'}">
+            <label for="input-id">Id</label>
+            <input id="input-id" type="text" name="bookId" readonly="readonly"/>
+        </div>
+        <div class="row">
+            <label for="input-title">Title</label>
+            <input id="input-title" type="text" name="title"/>
+        </div>
+        <div class="row">
+            <label for="spec-author">Author</label>
+            <select id="spec-author" name="author">
+                <option th:value="null" th:if="${refer == '/book/new'}">Choose an author</option>
+            </select>
+        </div>
+        <div class="row">
+            <label for="spec-genre">Genre</label>
+            <select id="spec-genre" name="genre">
+                <option th:value="null" th:if="${refer == '/book/new'}">Choose a genre</option>
+            </select>
+        </div>
+        <div class="buttons">
+            <button type="button" onclick="saveBook()">Save</button>
+            <a th:href="@{/books}">
+                <button type="button">Cancel</button>
+            </a>
+        </div>
+        <div class="error row" id="error"></div>
+    </div>
+</form>
+</body>
+</html>
