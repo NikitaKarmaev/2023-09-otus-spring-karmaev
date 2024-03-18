@@ -1,37 +1,43 @@
-package ru.otus.hw.controller;
+package ru.otus.hw.controller.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.model.Author;
 import ru.otus.hw.model.Book;
 import ru.otus.hw.model.Genre;
+import ru.otus.hw.model.dto.NewBookDto;
 import ru.otus.hw.model.dto.OldBookDto;
 import ru.otus.hw.service.AuthorService;
 import ru.otus.hw.service.BookService;
 import ru.otus.hw.service.GenreService;
 
+import static org.hamcrest.Matchers.containsString;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(BookController.class)
-public class BookControllerTest {
+@WebMvcTest(BookRestController.class)
+public class BookRestControllerTest {
 
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockBean
     private BookService bookService;
@@ -72,7 +78,7 @@ public class BookControllerTest {
                 new Genre(1, "Genre_1"));
         when(bookService.findById(1L)).thenReturn(Optional.of(book));
 
-        this.mvc.perform(get("/book/1")).andDo(print())
+        this.mvc.perform(get("/api/books/1")).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Book_1")))
                 .andExpect(content().string(containsString("Author_1")))
@@ -84,7 +90,7 @@ public class BookControllerTest {
     public void findBooks() throws Exception {
         List<Book> books = dbBooks;
         when(bookService.findAll()).thenReturn(books);
-        this.mvc.perform(get("/books")).andDo(print())
+        this.mvc.perform(get("/api/books")).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Book_1")))
                 .andExpect(content().string(containsString("Book_2")))
@@ -92,72 +98,34 @@ public class BookControllerTest {
     }
 
     @Test
-    @DisplayName("Получение формы для обновления книги")
-    public void getUpdateBookForm() throws Exception {
-        var book = new Book(1, "Book_1",
-                new Author(1, "Author_1"),
-                new Genre(1, "Genre_1"));
-
-        when(bookService.findById(1)).thenReturn(Optional.of(book));
-        when(authorService.findAll()).thenReturn(dbAuthors);
-        when(genreService.findAll()).thenReturn(dbGenres);
-
-        this.mvc.perform(get("/book/edit/1")).andDo(print())
-                .andExpect(content().string(containsString(
-                        "name=\"bookId\" readonly=\"readonly\" value=\"1\"/>")))
-                .andExpect(content().string(containsString(
-                        "name=\"title\" value=\"Book_1\"")))
-                .andExpect(content().string(containsString(
-                        "<option value=\"1\" selected=\"selected\">Author_1</option>")))
-                .andExpect(content().string(containsString(
-                        "<option value=\"1\" selected=\"selected\">Genre_1</option>")));
-    }
-
-    @Test
     @DisplayName("Обновление книги")
     public void updateBook() throws Exception {
-        var bookUpdateDto = new OldBookDto(1, "Book_1", 1L, 1L);
+        var oldBookDto = new OldBookDto(1, "Book_1", 1L, 1L);
 
         when(authorService.findAll()).thenReturn(dbAuthors);
         when(genreService.findAll()).thenReturn(dbGenres);
 
-        this.mvc.perform(post("/book/edit")
-                        .param("bookId", String.valueOf(bookUpdateDto.getBookId()))
-                        .param("title", bookUpdateDto.getTitle())
-                        .param("authorId", String.valueOf(bookUpdateDto.getAuthorId()))
-                        .param("genreId", String.valueOf(bookUpdateDto.getGenreId())))
-                .andExpect(status().is(302));
+        this.mvc.perform(put("/api/books/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(oldBookDto)))
+                        .andExpect(status().is(200));
     }
 
     @Test
     @DisplayName("Удаление книги")
     public void deleteBook() throws Exception {
-        this.mvc.perform(post("/book/delete/1"))
-                .andExpect(status().is(302));
-    }
-
-    @Test
-    @DisplayName("Получение формы для сохранения кнмгм")
-    public void getSaveBookForm() throws Exception {
-        when(authorService.findAll()).thenReturn(dbAuthors);
-        when(genreService.findAll()).thenReturn(dbGenres);
-        this.mvc.perform(get("/book/new")).andDo(print())
-                .andExpect(content().string(containsString(
-                        "<input id=\"input-title\" type=\"text\" name=\"title\" value=\"\"/>")))
-                .andExpect(content().string(containsString(
-                        "<option value=\"\">Choose an author</option>")))
-                .andExpect(content().string(containsString(
-                        "<option value=\"\">Choose a genre</option>")));
+        this.mvc.perform(delete("/api/books/1"))
+                .andExpect(status().is(200));
     }
 
     @Test
     @DisplayName("Сохранение книги")
     public void saveBook() throws Exception {
-        this.mvc.perform(post("/book/new")
-                        .param("title", "Test book")
-                        .param("authorId", "1")
-                        .param("genreId", "1"))
-                .andExpect(status().is(302));
+        var newBookDto = new NewBookDto("Test book", 1L, 1L);
+        this.mvc.perform(post("/api/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(newBookDto)))
+                        .andExpect(status().is(200));
     }
 
 
